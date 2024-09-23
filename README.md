@@ -1,7 +1,7 @@
-# Aplicación de Gestión de Datos para Modelos de IA
+## Prueba de aplicación de Gestión de Datos para Modelos de IA
 
 ## Descripción
-Esta aplicación permite a los usuarios registrarse, iniciar sesión y cargar archivos CSV para su posterior almacenamiento y visualización en una base de datos. Es ideal para el manejo de datos destinados a modelos de inteligencia artificial.
+Esta aplicación permite a los usuarios registrarse, iniciar sesión y cargar archivos CSV para su posterior almacenamiento y visualización en una base de datos. 
 
 ## Funcionalidades
 1. **Módulo de registro y login:** Los usuarios pueden registrarse con un nombre de usuario, correo electrónico y contraseña. Las contraseñas están encriptadas.
@@ -13,3 +13,6 @@ Esta aplicación permite a los usuarios registrarse, iniciar sesión y cargar ar
 
 ```bash
 pip install -r requirements.txt
+```
+- **Base de datos:** Se utiliza SQLite como base de datos. 
+

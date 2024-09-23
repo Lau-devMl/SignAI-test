@@ -12,10 +12,19 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
-# Motor de conexión con la base de datos
+# Motor de conexión con la db
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}) 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+#Obtener una sesión de la db
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 # Prueba de conexión
 def probar_conexion():
