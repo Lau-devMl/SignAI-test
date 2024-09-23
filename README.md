@@ -16,3 +16,17 @@ pip install -r requirements.txt
 ```
 - **Base de datos:** Se utiliza SQLite como base de datos. 
 
+
+## Ejecución
+Para ejecutar la aplicación usar el comando
+
+```bash
+uvicorn app.main:app --reload
+
+```
+y finalmente para acceder a la interfaz se debe buscar en el navegador: 
+
+http://localhost:8000
+
+o en su defecto el puerto indicado al correr el comando anterior.
+

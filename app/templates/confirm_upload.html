@@ -4,12 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Confirmar Carga de CSV</title>
-    <style>
-        .error {
-            color: red;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <h1>Confirmar Carga de CSV</h1>
@@ -42,31 +37,25 @@
 
     <form id="upload-form" action="/confirm_upload" method="post">
         <input type="hidden" name="data" value="{{ data | tojson | safe }}">
-        <button type="submit">Enviar</button>
-        <a href="/upload"><button type="button">Cancelar</button></a>
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" style="padding: 10px 20px; margin: 0 5px;">Enviar</button>
+            <button type="button" onclick="window.location.href='/upload'" style="padding: 10px 20px; margin: 0 5px;">Cancelar</button>
+        </div>
     </form>
-
     <script>
-        document.getElementById('upload-form').onsubmit = function(event) {
-            const rows = document.querySelectorAll('#data-table tr');
-            let hasError = false;
-            let errorMessage = '';
-
-            rows.forEach(row => {
-                const valor = row.cells[3].innerText; // Asumiendo que la columna 'Valor' es la cuarta
-                if (isNaN(valor) && valor.trim() !== '') {
-                    hasError = true;
-                    errorMessage += `Error en fila: ${row.rowIndex + 1} - El valor '${valor}' no es un número válido.<br>`;
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/confirm_upload', true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    alert("Datos cargados correctamente!");
+                    window.location.href = "/upload";
                 }
-            });
-
-            if (hasError) {
-                event.preventDefault(); // Detener el envío del formulario
-                document.getElementById('error-message').innerHTML = errorMessage;
-            } else {
-                document.getElementById('error-message').innerHTML = ''; // Limpiar mensajes de error
-            }
-        };
+            };
+            xhr.send(formData);
+        });
     </script>
 </body>
 </html>

@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Carga de Datos</title>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <h1>Cargar Archivo CSV</h1>
     
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".csv" required>
-        <button type="submit">Cargar</button>
-    </form>
+    <div style="text-align: center; margin-top: 50px;"> 
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".csv" required>
+            <button type="submit">Cargar</button>
+        </form>
+
+        <form action="/logout" method="post" style="margin-top: 20px;">
+            <button type="submit">Cerrar sesión</button>
+        </form>
+    </div>
 </body>
 </html>

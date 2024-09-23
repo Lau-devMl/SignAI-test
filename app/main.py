@@ -4,7 +4,8 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 import pandas as pd
-import json
+import csv
+from io import StringIO
 from .db import get_db, engine
 from .models import Usuario, Base, DatoCargado
 from .auth import get_password_hash, verify_password
@@ -15,6 +16,7 @@ from io import StringIO
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
 
 # Configuración de plantillas
 templates = Jinja2Templates(directory="app/templates")
@@ -95,27 +97,33 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail="El archivo debe ser un CSV")
 
 # Confirmar y guardar carga
+
 @app.post("/confirm_upload")
 async def confirm_upload(request: Request, data: str = Form(...), db: Session = Depends(get_db)):
-    print("Datos recibidos:", data) 
-    try:
-        # Asegurarse de que los datos sean un JSON válido
-        registros = json.loads(data)
-    except json.JSONDecodeError as e:
-        raise HTTPException(status_code=400, detail=f"Error al decodificar JSON: {e}")
+    print("Datos recibidos:", data)
 
-    for item in registros:
-        nuevo_registro = DatoCargado(
-            id_usuario=current_user_id, 
-            nombre_archivo=item.get("nombre_archivo"),
-            fecha_carga=datetime.utcnow(),
-            atributo=item.get("atributo"),
-            etiqueta=item.get("etiqueta"),
-            valor=item.get("valor"),
-            categoria=item.get("categoria"),
-            resultado=item.get("resultado"),
-        )
-        db.add(nuevo_registro)
+    rows = [row.split(',') for row in data.split('\n')]
+
+    for row in rows:
+        if len(row) == 5:
+            atributo, etiqueta, valor, categoria, resultado = row
+            nuevo_registro = DatoCargado(
+                id_usuario=current_user_id, 
+                nombre_archivo=file.filename,
+                fecha_carga=datetime.utcnow(),
+                atributo=atributo,
+                etiqueta=etiqueta,
+                valor=valor,
+                categoria=categoria,
+                resultado=resultado,
+            )
+            db.add(nuevo_registro)
 
     db.commit()  
-    return RedirectResponse(url="/upload", status_code=303)
+    return RedirectResponse(url="/upload", status_code=303, headers={"HX-Trigger": "datosCargados"})
+
+@app.post("/logout")
+async def logout_user():
+    global current_user_id
+    current_user_id = None  # Limpiar el usuario autenticado
+    return RedirectResponse(url="/login", status_code=303)

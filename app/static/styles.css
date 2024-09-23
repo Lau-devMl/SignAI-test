@@ -1,0 +1,58 @@
+/* Para alinear el contenedor principal */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 300px;
+    margin: 0 auto; /* Agrega esto para centrar el formulario */
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+button {
+    padding: 10px;
+    background-color: #67c8af;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #52b49b;
+}
+
+p {
+    text-align: center;
+    margin-top: 10px;
+}
+
+a {
+    color: #67c8af;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
