@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Carga de CSV</title>
+    <style>
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Confirmar Carga de CSV</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre del Archivo</th>
+                <th>Atributo</th>
+                <th>Etiqueta</th>
+                <th>Valor</th>
+                <th>Categoría</th>
+                <th>Resultado</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+            {% for row in data %}
+                <tr>
+                    <td>{{ row.nombre_archivo }}</td>
+                    <td>{{ row.atributo }}</td>
+                    <td>{{ row.etiqueta }}</td>
+                    <td>{{ row.valor }}</td>
+                    <td>{{ row.categoria }}</td>
+                    <td>{{ row.resultado }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="error-message" class="error"></div>
+
+    <form id="upload-form" action="/confirm_upload" method="post">
+        <input type="hidden" name="data" value="{{ data | tojson | safe }}">
+        <button type="submit">Enviar</button>
+        <a href="/upload"><button type="button">Cancelar</button></a>
+    </form>
+
+    <script>
+        document.getElementById('upload-form').onsubmit = function(event) {
+            const rows = document.querySelectorAll('#data-table tr');
+            let hasError = false;
+            let errorMessage = '';
+
+            rows.forEach(row => {
+                const valor = row.cells[3].innerText; // Asumiendo que la columna 'Valor' es la cuarta
+                if (isNaN(valor) && valor.trim() !== '') {
+                    hasError = true;
+                    errorMessage += `Error en fila: ${row.rowIndex + 1} - El valor '${valor}' no es un número válido.<br>`;
+                }
+            });
+
+            if (hasError) {
+                event.preventDefault(); // Detener el envío del formulario
+                document.getElementById('error-message').innerHTML = errorMessage;
+            } else {
+                document.getElementById('error-message').innerHTML = ''; // Limpiar mensajes de error
+            }
+        };
+    </script>
+</body>
+</html>
